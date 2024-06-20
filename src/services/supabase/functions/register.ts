@@ -1,4 +1,6 @@
+import { revalidatePath } from 'next/cache'
 import { supabase } from '../client'
+import { USER_TYPES } from './types'
 
 interface RegisterProps {
   email: string
@@ -11,7 +13,7 @@ interface RegisterProps {
 }
 
 export const register = async ({ email, password, phone, birthdate, firstName, lastName, role }: RegisterProps) => {
-  return await supabase.auth.signUp({
+  await supabase.auth.signUp({
     email,
     password,
     phone,
@@ -31,4 +33,12 @@ export const register = async ({ email, password, phone, birthdate, firstName, l
       }
       return data
     })
+
+  const revalidateOptions = {
+    [USER_TYPES.STUDENT]: () => revalidatePath('/admin/students'),
+    [USER_TYPES.PROFESSOR]: () => revalidatePath('/admin/professor'),
+    [USER_TYPES.COORDINATOR]: () => revalidatePath('/admin/coordinators')
+  }
+
+  revalidateOptions[role]()
 }
