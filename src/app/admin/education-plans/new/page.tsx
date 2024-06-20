@@ -1,96 +1,106 @@
-import { Form, H1, LabeledInput, LabeledSelect, Main, SubmitButton } from '@/components/utils'
-import { SemesterSection } from './components/semester-section'
-import { Tables } from 'database.types'
-import { createEducationPlan, getEducationPlan, updateEducationPlan } from '@/services/supabase/actions/admin/education-plan'
-import { getReducedCareers } from '@/services/supabase/actions/careers'
-import { getSubjects } from '@/services/supabase/actions/subjects'
-import { v4 } from '@/utils/uuid'
+import {
+	Form,
+	H1,
+	LabeledInput,
+	LabeledSelect,
+	Main,
+	Option,
+	SubmitButton,
+} from "@/components/utils";
+import { SemesterSection } from "./components/semester-section";
+import type { Tables } from "database.types";
+import {
+	createEducationPlan,
+	getEducationPlan,
+	updateEducationPlan,
+} from "@/services/supabase/actions/admin/education-plan";
+import { getReducedCareers } from "@/services/supabase/actions/careers";
+import { getSubjects } from "@/services/supabase/actions/subjects";
+import { v4 } from "@/utils/uuid";
 
 interface Props {
-  params: {
-    id: string
-  }
-  searchParams: {
-    q?: string
-  }
-  isEditMode?: boolean
+	params: {
+		id: string;
+	};
+	searchParams: {
+		q?: string;
+	};
+	isEditMode?: boolean;
 }
 
-export default async function NewEducationPlan ({ params, isEditMode = false, searchParams }: Props) {
-  const planEdu = isEditMode ? await getEducationPlan(params.id) : null
-  const careers = !isEditMode && await getReducedCareers()
-  console.log(searchParams.q)
+export default async function NewEducationPlan({
+	params,
+	isEditMode = false,
+	searchParams,
+}: Props) {
+	const planEdu = isEditMode ? await getEducationPlan(params.id) : null;
+	const careers = !isEditMode && (await getReducedCareers());
 
-  const subjectsInPlan = (planEdu?.semesters ?? []).reduce<Array<Tables<'subjects'>>>((acc, semester) => {
-    const subjects = (semester.semester_subjects ?? []).map((ss) => ss?.subjects).filter((s) => s != null) as Array<Tables<'subjects'>>
+	const subjectsInPlan = (planEdu?.semesters ?? []).reduce<
+		Array<Tables<"subjects">>
+	>((acc, semester) => {
+		const subjects = (semester.semester_subjects ?? [])
+			.map((ss) => ss?.subjects)
+			.filter((s) => s != null) as Array<Tables<"subjects">>;
 
-    return acc.concat(subjects)
-  }, [])
+		return acc.concat(subjects);
+	}, []);
 
-  const subjects = isEditMode
-    ? (await getSubjects()).filter((subject) => {
-        return !(subjectsInPlan ?? []).some((materia) => materia.id === subject.id)
-      })
-    : await getSubjects()
+	const subjects = isEditMode
+		? (await getSubjects()).filter((subject) => {
+				return !(subjectsInPlan ?? []).some(
+					(materia) => materia.id === subject.id,
+				);
+			})
+		: await getSubjects();
 
-  const action = async (data: FormData) => {
-    'use server'
+	const action = async (data: FormData) => {
+		"use server";
 
-    const func = isEditMode && planEdu != null
-      ? async () => await updateEducationPlan(planEdu, data)
-      : async () => await createEducationPlan(data)
+		const func =
+			isEditMode && planEdu != null
+				? async () => await updateEducationPlan(planEdu, data)
+				: async () => await createEducationPlan(data);
 
-    await func()
-  }
+		await func();
+	};
 
-  return (
-    <Main>
-      <H1 className='mb-4 text-white'>Nuevo plan educativo</H1>
+	return (
+		<Main>
+			<H1 className="mb-4 text-white">Nuevo plan educativo</H1>
 
-      <section className='flex-1'>
-        <Form
-          action={action}
-          className='h-full flex flex-col'
-        >
-          <LabeledInput
-            label='Nombre'
-            name='name'
-            type='text'
-            placeholder='Plan edu 2024'
-            required
-            defaultValue={planEdu?.name}
-          />
+			<section className="flex-1">
+				<Form action={action} className="h-full flex flex-col">
+					<LabeledInput
+						label="Nombre"
+						name="name"
+						type="text"
+						placeholder="Plan edu 2024"
+						required
+						defaultValue={planEdu?.name}
+					/>
 
-          {/* <LabeledSelect /> */}
+					{/* <LabeledSelect /> */}
 
-          {careers !== false && (
-            <LabeledSelect
-              label='Carrera'
-              name='career'
-              required
-            >
-              {careers.map((career) => (
-                <option
-                  key={v4()}
-                  value={career.id}
-                >
-                  {career.name}
-                </option>
-              ))}
-            </LabeledSelect>
-          )}
+					{careers !== false && (
+						<LabeledSelect label="Carrera" name="career" required>
+							{careers.map((career) => (
+								<Option key={v4()} value={career.id}>
+									{career.name}
+								</Option>
+							))}
+						</LabeledSelect>
+					)}
 
-          <SemesterSection
-            defaultValue={planEdu ?? undefined}
-            subjects={subjects}
-            search={searchParams.q}
-          />
+					<SemesterSection
+						defaultValue={planEdu ?? undefined}
+						subjects={subjects}
+						search={searchParams.q}
+					/>
 
-          <SubmitButton>
-            Crear plan educativo
-          </SubmitButton>
-        </Form>
-      </section>
-    </Main>
-  )
+					<SubmitButton>Crear plan educativo</SubmitButton>
+				</Form>
+			</section>
+		</Main>
+	);
 }

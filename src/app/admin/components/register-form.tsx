@@ -89,14 +89,14 @@ export const RegisterForm = ({
 			<LabeledInput
 				label="Nombres"
 				name="first_name"
-				placeholder="Jose"
+				placeholder="Escribe el nombre de tu usuario"
 				defaultValue={defaultValues?.first_name ?? ""}
 			/>
 
 			<LabeledInput
 				label="Apellidos"
 				name="last_name"
-				placeholder="Perez Leon"
+				placeholder="Escribe el apellido de tu usuario"
 				defaultValue={defaultValues?.last_name ?? ""}
 			/>
 
