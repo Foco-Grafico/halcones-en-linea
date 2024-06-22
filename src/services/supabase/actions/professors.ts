@@ -479,14 +479,14 @@ export const getActivityStudentInfoForProfessor = async (activityId: string, stu
               .eq('student', studentId)
               .single()
 
-            if (r.is_correct === false && response == null) return {
+            if (response == null) return {
               ...r,
               studentIsCorrect: null
             }
 
             return {
               ...r,
-              studentIsCorrect: !!response?.id
+              studentIsCorrect: r.is_correct
             }
           }),
         )

@@ -119,23 +119,27 @@ export default async function StudentActivityPage({
 											)}
 											{q.type === "multiple_option" && (
 												<ol className="list-upper-alpha space-y-2 py-2 pl-5 text-lg">
-													{q?.responses?.map((r) => (
-														<li
-															className={`
-														rounded-md px-1
-													${
-														r.studentIsCorrect === true
-															? "bg-green-400/50"
-															: r.studentIsCorrect === false
-																? "bg-red-400/50"
-																: ""
-													}
-													`}
-															key={v4()}
-														>
-															{r.option}
-														</li>
-													))}
+													{q?.responses?.map((r) => {
+														console.log(r);
+
+														return (
+															<li
+																className={`
+															rounded-md px-1
+														${
+															r.studentIsCorrect === true
+																? "bg-green-400/50"
+																: r.studentIsCorrect === false
+																	? "bg-red-400/50"
+																	: ""
+														}
+														`}
+																key={v4()}
+															>
+																{r.option}
+															</li>
+														);
+													})}
 												</ol>
 											)}
 										</div>

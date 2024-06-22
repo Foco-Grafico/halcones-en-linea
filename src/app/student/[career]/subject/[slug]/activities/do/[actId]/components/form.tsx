@@ -15,7 +15,7 @@ export const ActivityForm = ({ act }) => {
 
 				const form = new FormData(e.currentTarget);
 
-				const pathnameToRevalidate = `/studen/${params.career}/subject/${params.slug}/activities`;
+				const pathnameToRevalidate = `/student/${params.career}/subject/${params.slug}/activities`;
 
 				uploadQuestionsWorkActivity(form, pathnameToRevalidate)
 					.catch((err) => {
