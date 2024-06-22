@@ -5,6 +5,7 @@ import { USER_TYPES } from "../functions/types";
 import type { GetMyAlumnsProps, StartClassProps } from "./professor.types";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { ReducedCareer } from "../types";
 
 export const getProfessors = async () => {
   const supabase = await createClient();
@@ -88,6 +89,7 @@ export const getMyClasses = async (careerSlug: string) => {
     const c = configData[config.careers.id];
 
     if (c == null) {
+      console.log('c == null');
       configData[config.careers.id] = {
         ...config.careers,
         educationPlans: {
@@ -113,54 +115,14 @@ export const getMyClasses = async (careerSlug: string) => {
 
     const e = c.educationPlans[config.education_plans.id];
 
-    if (e == null) {
-      c.educationPlans[config.education_plans.id] = {
-        ...config.education_plans,
-        groups: {
-          [config.groups.id]: {
-            ...config.groups,
-            semesters: {
-              [config.semesters.id]: {
-                ...config.semesters,
-                subjects: [config.subjects],
-              },
-            },
-          },
-        },
-      };
-
-      continue;
-    }
-
     const g = e.groups[config.groups.id];
-
-    if (g == null) {
-      e.groups[config.groups.id] = {
-        ...config.groups,
-        semesters: {
-          [config.semesters.id]: {
-            ...config.semesters,
-            subjects: [config.subjects],
-          },
-        },
-      };
-
-      continue;
-    }
 
     const s = g.semesters[config.semesters.id];
 
-    if (s == null) {
-      g.semesters[config.semesters.id] = {
-        ...config.semesters,
-        subjects: [config.subjects],
-      };
-
-      continue;
-    }
-
     s.subjects.push(config.subjects);
   }
+
+  console.log(configData)
 
   const configDataArray = Object.values(configData).map((c) => ({
     ...c,
@@ -173,7 +135,9 @@ export const getMyClasses = async (careerSlug: string) => {
     })),
   }));
 
-  return configDataArray[0];
+  console.log(configDataArray)
+
+  return configDataArray[0]
 };
 
 export const getMyReducedCareers = async () => {
@@ -196,7 +160,11 @@ export const getMyReducedCareers = async () => {
     throw new Error("Error getting professor careers");
   }
 
-  return dataCareers.map((c) => c.careers);
+  const careers = dataCareers.map((c) => c.careers);
+
+  const noDuplicateCareers = careers.filter((c, i, arr) => arr.findIndex((a) => a?.id === c?.id) === i);
+
+  return noDuplicateCareers
 };
 
 export const getMyStudents = async ({

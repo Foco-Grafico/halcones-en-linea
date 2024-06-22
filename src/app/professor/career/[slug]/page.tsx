@@ -1,5 +1,6 @@
 import { H1, Main } from "@/components/utils";
 import { getMyClasses } from "@/services/supabase/actions/professors";
+import { v4 } from "@/utils/uuid";
 import Link from "next/link";
 
 interface Props {
@@ -11,13 +12,31 @@ interface Props {
 export default async function CareerPage({ params }: Props) {
 	const classes = await getMyClasses(params.slug);
 
-	console.log(classes);
-	console.log(params);
+	// const formattedClasses = classes.educationPlans.map((plan) => {
+	// 	const groups = plan.groups.map((group) => {
+	// 		const semesters = group.semesters.map((semester) => {
+	// 			return {
+	// 				...semester,
+	// 			};
+	// 		});
+	// 		return {
+	// 			...group,
+	// 			semesters,
+	// 		};
+	// 	});
+
+	// 	return {
+	// 		...plan,
+	// 		groups,
+	// 	};
+	// });
+
+	// console.log(formattedClasses);
 
 	return (
 		<Main>
 			<div className="text-white flex flex-row w-full">
-				{classes.educationPlans?.map((plan) =>
+				{classes?.educationPlans?.map((plan) =>
 					plan.groups?.map((group) =>
 						group.semesters?.map((semester) =>
 							semester.subjects?.map((subject) => (
