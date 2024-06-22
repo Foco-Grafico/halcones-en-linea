@@ -43,3 +43,16 @@ export const createGroup = async (data: FormData) => {
   revalidatePath('/admin/groups')
   redirect('/admin/groups')
 }
+
+export const getGroupById = async (id: string) => {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.from('groups').select('id, name, created_at, careers(id, name)').eq('id', id).single()
+
+  if (error != null) {
+    console.error('Error getting group:', error)
+    throw new Error('Error getting group')
+  }
+
+  return data
+}

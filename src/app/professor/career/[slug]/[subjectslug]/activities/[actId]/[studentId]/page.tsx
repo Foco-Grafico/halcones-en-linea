@@ -13,6 +13,7 @@ import {
 } from "@tabler/icons-react";
 import { CalifyForm } from "./components/calify-form";
 import { SelectStudent } from "./components/select-student";
+import { getGroupById } from "@/services/supabase/actions/groups";
 
 interface Props {
 	params: {
@@ -41,17 +42,21 @@ export default async function StudentActivityPage({
 		semesterId: searchParams.semesterId,
 	});
 
+	const group = await getGroupById(searchParams.groupId);
+
 	const selectedStudentActivity = await getActivityStudentInfoForProfessor(
 		params.actId,
 		params.studentId,
 	);
 
-	console.log(selectedStudentActivity);
-	console.log(listOfStudents);
-
 	return (
 		<Main>
 			<header className="flex flex-col border-b border-b-itesus-tertiary pb-2">
+				<span>
+					Grupo: {group.name} -{" "}
+					{decodeURIComponent(params.subjectslug).replace("-", " ")}
+				</span>
+
 				<div className="mx-auto bg-itesus-tertiary min-w-96 px-3">
 					<h1 className="text-itesus-primary text-2xl text-center caption-top font-bold">
 						{selectedStudentActivity.activity.name}
