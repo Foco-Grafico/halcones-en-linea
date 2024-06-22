@@ -1,5 +1,6 @@
 import { getMyActivities } from "@/services/supabase/actions/activities";
 import { v4 } from "@/utils/uuid";
+import { IconTrash } from "@tabler/icons-react";
 import Link from "next/link";
 
 export const DisplayActivities = async ({ params, searchParams }) => {
@@ -59,6 +60,14 @@ export const DisplayActivities = async ({ params, searchParams }) => {
 										? activity?.deadline.split("T")[0]
 										: ""}
 								</span>
+							</div>
+							<div>
+								<button
+									type="button"
+									className="bg-[#c23333] text-white font-bold px-3 py-1 rounded-md"
+								>
+									<IconTrash />
+								</button>
 							</div>
 						</article>
 					</Link>
