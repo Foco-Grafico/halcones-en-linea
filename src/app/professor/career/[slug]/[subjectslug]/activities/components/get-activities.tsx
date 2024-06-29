@@ -2,6 +2,7 @@ import { getMyActivities } from "@/services/supabase/actions/activities";
 import { v4 } from "@/utils/uuid";
 import { IconTrash } from "@tabler/icons-react";
 import Link from "next/link";
+import { RemoveActivityButton } from "./remove-activity-button";
 
 export const DisplayActivities = async ({ params, searchParams }) => {
 	const activities = await getMyActivities(
@@ -62,12 +63,7 @@ export const DisplayActivities = async ({ params, searchParams }) => {
 								</span>
 							</div>
 							<div>
-								<button
-									type="button"
-									className="bg-[#c23333] text-white font-bold px-3 py-1 rounded-md"
-								>
-									<IconTrash />
-								</button>
+								<RemoveActivityButton activityId={activity.id} />
 							</div>
 						</article>
 					</Link>

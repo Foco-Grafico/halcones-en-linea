@@ -511,3 +511,13 @@ export const uploadQuestionsWorkActivity = async (formdata: FormData, revalidate
     revalidatePath(revalidatePathname);
   }
 };
+
+export const deleteActivity = async (activityId: number, revalidatePathname?: string) => {
+  const supabase = await createClient();
+
+  await supabase.from("activities").delete().eq("id", activityId);
+
+  if (revalidatePathname != null) {
+    revalidatePath(revalidatePathname);
+  }
+}

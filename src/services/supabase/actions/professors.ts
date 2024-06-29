@@ -264,7 +264,7 @@ export const getActivityInfoForProfessor = async (activityId: string, { careerId
     .single();
 
   if (errorActivity != null) {
-    console.error("Error getting activity:", errorActivity);
+    console.log("Error getting activity:", errorActivity);
     throw new Error("Error getting activity");
   }
 
