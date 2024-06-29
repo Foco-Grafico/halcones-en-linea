@@ -1,7 +1,7 @@
 import { DistroNavASide } from "@/app/layouts/distro-nav-aside";
 import { getMyClasses } from "@/services/supabase/actions/professors";
 import { constructSideBarOptions } from "@/components/sidebar/utils/add-side-bar-option";
-import type { SideBarOption, SideBarOptions } from "@/components/sidebar/types";
+import type { SideBarOption } from "@/components/sidebar/types";
 import { getUser } from "@/services/supabase/actions/auth";
 import { queryParamsSections, subjectRefs } from "./enums";
 import { NavBarProf } from "@/components/navbar/variants/professor";
@@ -37,25 +37,6 @@ export default async function Layout({ children, params }: Props) {
 							defaultRef: subjectRefs.schedule,
 						})),
 					};
-
-					// const elements: SideBarOptions = semester.subjects.map((subject) => ({
-					// 	title: `${semester.number}° SEMESTRE - GRUPO ${group.name} - ${plan.name.toUpperCase()}`,
-					// 	sub: [
-					// 		{
-					// 			title: `${subject.name}`,
-					// 			href: `/professor/career/${params.slug}/${subject.slug ?? ""}`,
-					// 			queryParams: {
-					// 				groupId: group.id,
-					// 				semesterId: semester.id,
-					// 				educationPlanId: plan.id,
-					// 				subjectId: subject.id,
-					// 				careerId: career.id,
-					// 			},
-					// 			type: queryParamsSections.professorSubject,
-					// 			defaultRef: subjectRefs.schedule,
-					// 		},
-					// 	],
-					// }));
 					// biome-ignore lint/performance/noAccumulatingSpread: <explanation>
 					return [...acc, SideBarElement];
 				}, []);

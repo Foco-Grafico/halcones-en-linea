@@ -2,7 +2,7 @@
 import type { Tables } from "database.types";
 import { createClient } from "../actions";
 import { USER_TYPES } from "../functions/types";
-import type { GetMyAlumnsProps, StartClassProps } from "./professor.types";
+import type { FileWithName, GetMyAlumnsProps, StartClassProps } from "./professor.types";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { ReducedCareer } from "../types";
@@ -585,5 +585,17 @@ export const califyStudent = async ({ actId, calification, studentId, message }:
   if (redirectUri != null) {
     revalidatePath(redirectUri)
     redirect(redirectUri)
+  }
+}
+
+export const uploadClass = async (subjectId: number, file: FileWithName, revalidateUri?: string) => {
+  const supabase = await createClient();
+
+  const buffer = Buffer.from(file.bytes, "base64")
+
+  await supabase.storage.from('classes').upload(`${subjectId}/${file.name}`, buffer)
+
+  if (revalidateUri != null) {
+    revalidatePath(revalidateUri)
   }
 }
