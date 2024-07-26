@@ -16,6 +16,7 @@ export const UploadClassForm = ({ subjectId }: Props) => {
 
 	return (
 		<form
+			className="flex gap-4 items-center"
 			onSubmit={(e) => {
 				e.preventDefault();
 
@@ -48,7 +49,11 @@ export const UploadClassForm = ({ subjectId }: Props) => {
 			}}
 		>
 			<input ref={$inputFile} type="file" />
-			<button type="submit">Subir</button>
+			<button className="
+				rounded-md
+				bg-itesus-primary
+				px-3
+			" type="submit">Subir</button>
 		</form>
 	);
 };
